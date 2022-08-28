@@ -1,0 +1,44 @@
+
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+  "dis dis dis dis"
+  "AC AC div mul"
+  "seven eight nine sub"
+  "four five six add"
+  "one two three equal"
+  "zero zero decimal equal"
+}
+
+.padButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 40px;
+  border: 1px solid black;
+  background-color: gray;
+  color: white;
+  font-size: 20px;
+  cursor:pointer;
+}
+
+#clear {
+  grid-area: AC;
+}
+
+#equals {
+  grid-area: equal;
+}
+
+#zero {
+  grid-area: zero;
+}
+
+#display {
+  grid-area: dis;
+  background-color: black;
+  text-align: right;
+}
