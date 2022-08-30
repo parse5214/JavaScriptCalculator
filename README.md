@@ -3,7 +3,7 @@
 
 ## Description:
 
-This is a JavaScript Calculator using useTrait by Adam Nathaniel Davis.
+This is a JavaScript Calculator from the freeCodeCamp Projects using useTrait by Adam Nathaniel Davis.
 
 Below is the link to the information about the implementation about this simple
 hook. Its advantages and disadvantages.
