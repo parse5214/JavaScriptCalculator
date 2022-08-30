@@ -37,7 +37,7 @@
   grid-area: zero;
 }
 
-#display {
+#display-box {
   grid-area: dis;
   background-color: black;
   text-align: right;
