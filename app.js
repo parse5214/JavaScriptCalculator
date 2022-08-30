@@ -1,13 +1,32 @@
 
+function useTrait(initialValue) {
+  const [trait, updateTrait] = React.useState(initialValue);
+
+  let current = trait;
+
+  const get = () => current;
+
+  const set = newValue => {
+     current = newValue;
+     updateTrait(newValue);
+     return current;
+  }
+
+  return {
+     get,
+     set,
+  }
+}
+
 const App = () => {
 
-  const [expression, setExpression] = React.useState("0")
-  const [answer, setAnswer] = React.useState(0)
-  const [allowZeros, setAllowZeros] = React.useState(0)
-  const [allowPoint, SetAllowPoint] = React.useState(1)
+  const expression = useTrait("0")
+  const answer = useTrait(0)
+  const allowZeros = useTrait(0)
+  const allowPoint = useTrait(1)
 
   const disp = (symbol) => {
-    setExpression((prev) => {
+    expression.set((prev=expression.get()) => {
       let newVal
       if(/[+*-/]/.test(symbol) && /[+*-/]/.test(prev[prev.length-1])) {
         if(/[-]/.test(symbol)) newVal = prev + symbol
@@ -17,30 +36,29 @@ const App = () => {
             if(/[+*-/]/.test(prev[i])) cnt++
             else break
           }
-
           newVal = prev.slice(0,prev.length-cnt) + symbol
         }
       }else if(symbol === "0") {
-        if(allowZeros === 0) newVal = prev
-        else if(allowZeros === 1) {
+        if(allowZeros.get() === 0) newVal = prev
+        else if(allowZeros.get() === 1) {
           newVal = prev + symbol
-          setAllowZeros(0)
+          allowZeros.set(0)
         }else newVal = prev + symbol
       }else if(symbol === "."){
-        if(allowPoint === 1){
+        if(allowPoint.get() === 1){
           newVal = prev + symbol
-          SetAllowPoint(0)
-          setAllowZeros(2)
+          allowPoint.set(0)
+          allowZeros.set(2)
         }else newVal = prev 
       }else {
-        if(allowZeros === 0 && /[1-9]/.test(symbol)) {
+        if(allowZeros.get() === 0 && /[1-9]/.test(symbol)) {
           newVal = prev.slice(0,-1) + symbol
-          setAllowZeros(2)
+          allowZeros.set(2)
         }else {
           if(/[+*-/]/.test(symbol)) {
-            setAllowZeros(1)
-            SetAllowPoint(1)
-          }else setAllowZeros(2)
+            allowZeros.set(1)
+            allowPoint.set(1)
+          }else allowZeros.set(2)
           newVal = (prev + symbol)
         }
       }
@@ -49,29 +67,28 @@ const App = () => {
   }
 
   const allClear = () => {
-    setAllowZeros(0)
-    SetAllowPoint(1)
-    setExpression("0")
-    setAnswer(0)
+    allowZeros.set(0)
+    allowPoint.set(1)
+    expression.set("0")
+    answer.set(0)
   }
 
   const calculate = () => {
-    let res = eval(expression)
-    console.log(res)
-    setAnswer(res)
-    setExpression((res).toString())
-    if(res === 0) setAllowZeros(0)
-    else setAllowZeros(2)
-    if(Number.isInteger(res)) SetAllowPoint(1)
-    else SetAllowPoint(0)
+    let res = eval(expression.get())
+    answer.set(res)
+    expression.set((res).toString())
+    if(res === 0) allowZeros.set(0)
+    else allowZeros.set(2)
+    if(Number.isInteger(res)) allowPoint.set(1)
+    else allowPoint.set(0)
   }
 
   return (
     <div className="container-fluid justify-content-center">
       <div className="grid justify-content-center mt-5">
         <div id="display-box">
-          <input id="display" type="text" className="exp text-white border-0 col-12 text-end h4" style={{backgroundColor: 'black'}}value={expression} placeholder="0" disabled />
-          <input type="text" className="ans text-info border-0 col-12 text-end h2" style={{backgroundColor: 'black'}}value={answer} disabled />
+          <input id="display" type="text" className="exp text-white border-0 col-12 text-end h4" style={{backgroundColor: 'black'}}value={expression.get()} placeholder="0" disabled />
+          <input type="text" className="ans text-info border-0 col-12 text-end h2" style={{backgroundColor: 'black'}}value={answer.get()} disabled />
         </div>
         <div onClick={allClear} className="padButton bg-danger" id="clear">AC</div>
         <div onClick={() => disp("/")} className="padButton" id="divide">/</div>
